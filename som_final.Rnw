@@ -1,0 +1,146 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\usepackage{setspace}
+\doublespacing
+\usepackage{graphics}
+\usepackage{amscd}
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+          
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{\color{blue}Let's Get Organized! A Brief Study of Self-Organzing Maps}
+\author{Tim Kaye \\
+\emph{Math 159}, Professor ~\textsc{Chandler}}
+\maketitle
+
+
+
+\paragraph{Introduction \newline}
+
+\indent With the advancements in computer processing capabilities, researchers in many fields of science are now able to collect and analyze datasets of huge size and dimensionality. With the increasing dimensionality, it is difficult to visualize the data in a organized/understandable manner (van Heerden). Though there are many approcahes to mapping high-dimensaionly datasets into two dimensions (PCA is most commonly used), these methods do not incorporate information on how objects should be compared (Wehrens, 2). Alternatively, methods that start from distance and similarity matrices may be more powerful. One of these methods is Self Organizing Maps (SOMs), which  were first pioneered by Finnish Statistician Teuvo Kohonen in the early 80's. Simply stated, SOMs map high-dimensional data into lower dimensions, while geometric relations between nodes display their similarity. In other words, if two high-dimensional observations are similar, then their position within the 2-dimensional grid should be similar as well. In this sense, SOMs concentrate on the largest similarities.This reduction of dimensionality in SOMs allows us to visualize and translate what may seem to be perplexing and cryptic data. SOM's are a type of neural network, and combines the utilization of classification and clustering into a visual representation. 
+  \\ \indent Since SOMs are neural networks, they can be divided into two learning categories: supervised and unsupervised. Self-organizing maps are unsupervised, because the traning of the network is data driven and target results are not provided (Tugraz). In turn, SOMs have the capability of recognizing or classifying inputs that it has never encountered before, and a the new input is associated with the neuron it is mapped to. 
+  \\ \indent At the basis, SOMs are similar to clustering algorithms such as k-means. However, since the k-means algorithm is computationally heavy (as each data entry must be compared to all the others), one solution posed by SOMs is to represent the entire data set in a small set of models, where each model stands for a subset of similar data items. In turn, the operations take place on a much smaller scale, and is less computationally demanding. Kohonen SOMs are square/rectangular grids of neurons. 
+  \\ \indent The fundamentals of Self-Organizing Maps lies in two processes: training and mapping. The training algorithm maps the data input into weighted nodes, where the nodes are arranged onto the grid. The mapping stage uses the map to classify a new input, using the stable SOM. While clustering is a big part of the algorithm, the primary purpose of self-organizing maps is to display the classified data visually. Though this topic is recent, there have been many interesting and pragmatic approaches to classification using self-organizing maps, such as classifying global poverty, medicine, speech recognition, image analysis, ice shape clustering, etc. The larger applications of SOMs have been primarily in the management and retrieval of textual documents (Kohonen). 
+\paragraph{Methods \newline}
+
+ \indent The first step of a SOM is to map the data onto a $n$-dimensional grid of neurons. The grid is square/rectangular, and the number of rows and columns can be adjusted, depending on the data size and the number of classes. This grid is referred to as the $output space$ (typically 1 or 2 dimensional), and it tries to preserve relations within the data set. In other words, patterns that are present in the input space are topologically represented through the neurons in the output space. If n-dimensional vectors denoted: $X_{1}, X_{2}, ..., X_{m}$ are passed to the map, the components of these inputs: $x_{1}, x_{2}, ..., x_{m}$ are passed to the network as inputs, where m is the number of observations, and n is the number of dimensions of the observation. Next, at each step, a vector $X_{i}$ is chosen from the set $\{X_{1}, ..., X_{m}\}$. The distance between $X_{i}$ and each neuron is calculated using the Euclidean distance formula, and the neuron with the closest distance is deemed the 'winner' or best-matching unit (BMU).  This is a competitive process since the neurons in the output space compete to become activated. The connections between the neurons become ‘laterally inhibited’, or weighted, after the BMU is chosen. This ensures that the neurons (or weight vectors) drift towards denser groupings of neurons, while maintaining structure topographically. Though the weight of the BMU is adjusted the most, the neighboring neurons are also adjusted, in accordance to the learning function: \newline $M_{i,j}(t+1) = M_{i,j}(t) + h_{i,j}^{c}(t)(X_{i} - M_{i,j}(t))$. In this formula, $t$ is the number of iterations, $h_{i,j}^{c}$ is the neighboring function, and $c$ is the indices of $X_{i}$. 
+ 
+ \indent During training, the radius of the neighborhood functions decreases over time, such that each neuron will become less effected by it's relative neighbors. Depending on the approach, the radius ultimately decreases to either 0 or 1 (Bacao). When the radius is at 1, this stage in the SOM algorithm is identical to the k-means clustering algorithm, in which the update only occurs in the BMU/winning neuron. In comparing k-means with SOM through the same datasets, studies have shown that SOM's present a smaller quadratic error and classification error. Thus on average, SOM outperform the k-means algorithm with less variation in the results. Perhaps this is due to the fact that k-means are more prone to local optima than SOM (Bacao). As the decreasing neighborhood function causes neurons to re-arrange (similar to annealing), SOMs explore the input space more effectively. With local optima, SOMs basically allows for an early exploration of the entire search space, but as the radius and the learning rate tend towards 0, both SOM and k-means minimize the distance between the observations and the cluster centers. 
+
+  \indent Once the topological orderings of the vectors is finished (usually around 1000 iterations), the SOM becomes fine tuned and 'stable'. However one needs to fully consider the learning rate and the neighborhood function to obtain a stable SOM.
+
+  \indent One disadvantage to SOMs is that it is often difficult to label the neurons. Since classification information used to label the SOM neurons in a supervised fasion is often unavailable, there are several existing unsupervised neuron-labeling techniques (van Heerden, 2). The most common labeling method is supervised and relies on classification information in a labeling data set. If the input items fall into a finite number of classes, we can come up with corresponding symbolic labels. 
+
+  \indent Possible shapes of the neuron are `square' or 'hexagonal'. With these shapes it can be demonstrated how a self-organizing map adapts to the different sets of training patterns (Borgelt). The competition layer of the self-organizing map used by 'Kohonen' has a square/rectangular grid, specified by $som_grid$. Each grid point corresponds to one neuron, and thus the competition layer can be specified by the width and the height of this grid. Some recommend using 10 neurons for each expected class in the data set, though this is just a ballpark guess-timate. In the $som_make$ documentation, it suggests using $5*dlen^{.54321}$, where $dlen$ is the number of observations in the dataset. Considering this, since 'Swiss Heads' has 200 observations, it would be wise to use a grid-size of $ 9 x 9$.As it is difficult to find a universally accepted technique for correctly determining the number of neurons in a SOM (Charkhabi), the main goal is to find an orientation (M x N) that gives the best interpretation of the data. It really depends on the extent of detail you wish to have in the SOM, since small datasets generate small, but more general clusters, and large datasets generate many small clusters. In the toy dataset, the counts per node is presented to show the density at each nodein the SOM.
+The learning rate and the radius (neighborhood function) are set to the default parameters. The radius initially covers 2/3 of the grid space, and once it decays to 1, only the 'winning' neuron is updated. The learning rate (alpha), is set to 0.05 and decreases over time to 0.01 (Wehrens). The default number of iterations is set to 100, but I set it to 150 to see if it made any difference. 
+
+
+\paragraph{Data Analysis \newline}
+
+\indent To see firsthand how SOMs work, I used to ‘Kohonen’ package in R, and used the ‘Swiss.heads’ data set from the ‘Flury’ package in R. The ‘Swiss.heads’ seemed like a good candidate for a data set because it only has 6 variables, and 200 observations. With a reasonably sized grid, clusters can be generated with ease. The ‘Kohonen’ package utilizes Kohonen SOMs, and is flexible in displaying the SOM. However, unlike the ‘SOM’ R package, the shapes of neurons can only be set to ‘rectangular’ or ‘hexagonal’ in the ‘Kohonen’ package. 
+
+  \indent First, we created a Self-organizing map for the Swiss Heads data set using the $som$ method. The arguments passed to $som$ include the data (swiss.sc), the grid (5 x 4), alpha (the learning rate), radius (the neighborhood function), and rlen (the number of iterations, 150 in this case). Before passing the data into the SOM, we scaled the data using the $scale$ method. 
+
+<<echo=FALSE, results=hide>>=
+library(knitr)
+require('kohonen')
+require('Flury')
+@
+
+<<eval=TRUE, echo=TRUE>>=
+data("swiss.heads")
+swiss.sc <- scale(swiss.heads)
+set.seed(7)
+swiss.som <- som(data = swiss.sc, rlen=150, alpha = c(0.07, 0.01), 
+                 grid = somgrid(5,4, "hexagonal"))
+
+@
+
+
+
+
+\paragraph{Results \newline}
+  \indent From the above code and figures, one can generally see how a SOM clusters and classifies data visually. Figure 1 presents a SOM of the Swiss Heads data set using 20 neurons (5 x4). The hexagonal shape of the neuron is seen, and the legend indicates what each color corresponds to. As similar observations are mapped to similar locations, we see that observations with high MFB and BAM are mapped to the right side of the SOM, and observations with low LGAN, TFH and LTN are shifted towards the upper-left. Since Figure 1 doesn’t indicate the density at each neuron, Figure 2 is provided. Here, we see that the more ‘red’ a region is, the fewer observation are located at that neuron. Generally, the left side of the SOM appears to be denser than the right side. Furthermore, Figure. 3 shows the sum of the distances to all immediate neighbors (Wehrens). 
+  \indent As SOMs are mostly visual tools, SOMs based on the same data set with 81 nodes were created. As stated in the methods section, this value is a suggested value given the size of the data set. By looking at Figure. 4, it is evident that the SOM is difficult to interpret, as there are too many units. Figure. 5 gives the density at each unit in the SOM, and it is clear that there are only a few significant clusters, while most nodes just have 2 or 3 observations. Lastly, Figure. 3 shows the mean distance to the closest node during training. We see that around 450 iterations, the mean distance stays around the same. 
+
+\paragraph{Conclusion \newline}
+  \indent Self-organizing maps have been applied for practical data analysis, exploratory data analysis and data mining (van Heerden, 1). Though SOMs are best used as visual inteepretations, SOMs are very scalable to large data sets, and can be used to classify/cluster data with many dimensions and observations. However in these large data sets, finding a 'winner', and updating the neighbor neurons are time-expensive operations (Kohonen). As the initial radius is quite large, it may take some time for the radius to converge. A proposed approach to dealing with this is to first initialize a smaller map, through the principle-component method (PCA). After the small map has stabilized, new neurons/nodes are added to the SOM. The larger map must then stabilize in accordance with the smaller map. In addition, with adequate computing power, the complexity of SOMs can be reduced through parallel computing, in which the search for the winner can be partitioned into different processors (Valova). Regardless, one of the main virtues of SOMs is that they can compute really large mappings in reasonable time (Kohonen). Some modified SOM algorithms, such as the Batch SOM, only runs through a few iterations, but processes a lot of data at a time. This version of self-organizing maps diminishes the need for a learning rate. One of the disadvantages of SOMs is that it requires sufficient data to develop meaningful clusters. Lack of data, or too much data could weight the vectors and add randomness to the clusters. Thus finding the correct data involves determined which factors are the most relevant. Additionally, anomalies/outliers in the map could divide clusters into smaller clusters, creating homogeneity within the neurons.
+ \indent  In conclusion, we see that SOMs can be used to easily visualize high dimensional data. They can handle several types of classification problems, while they provide a useful and intelligible summary of the data (Pang). 
+
+  
+\paragraph{Appendix \newline}
+
+<<label=fig1,fig=TRUE,echo=FALSE, fig.width=3, fig.height=3>>=
+attach(swiss.heads)
+par(mfrow=c(1,1))
+plot(swiss.som, main=" ")
+title(main="",sub="Figure1. SOM of Swiss Heads. Grid size of 5x4. Hexagonal Shape ", font.sub=1)
+@
+
+
+<<label=fig2, fig=TRUE, echo=FALSE, fig.width=3, fig.height=3>>=
+attach(swiss.heads)
+par(mfrow=c(2,1))
+plot(swiss.som, type="counts", main= " ")
+title(main="",sub="Figure 2. Shows the density at each neuron in grid", font.sub=1)
+plot(swiss.som, type="dist.neighbours", main=" ")
+title(main="",sub="Figure 3. Mean dist of the observations at each neuron ", font.sub=1)
+detach(swiss.heads)
+@
+
+<<label=fig3, fig=TRUE, echo=FALSE, fig.width=3, fig.eight=3>>=
+attach(swiss.heads)
+par(mfrow=c(1,1))
+plot(swiss.som, type="changes", main=" ")
+title(main="",sub="Figure4. Shows mean distance to nearest neuron over time", font.sub=1)
+detach(swiss.heads)
+@
+
+<<label=fig4, fig=TRUE, echo=FALSE, fig.width=5, fig.height=5>>=
+attach(swiss.heads)
+par(mfrow=c(1,1))
+swiss.som <- som(data = swiss.sc, alpha = c(0.07, 0.01), rlen=150, grid = somgrid(9,9, "hexagonal"))
+plot(swiss.som, main="")
+title(main="", sub="Figure 4. SOM of same dataset, with 81 neurons", font.sub=1)
+detach(swiss.heads)
+@
+
+<<label=fig5, fig=TRUE, echo=FALSE, fig.width=5, fig.height=5>>=
+attach(swiss.heads)
+par(mfrow=c(1,1))
+plot(swiss.som, type="counts", main="")
+title(main="", sub="Figure 5. Density of each neuron in grid", font.sub=1)
+detach(swiss.heads)
+@
+
+
+\begin{thebibliography}{9}
+
+
+
+
+\bibitem{Bacao}Bação, Fernando, Victor Lobo, and Marco Painho. "Self-organizing maps as substitutes for k-means clustering." Computational Science–ICCS 2005. Springer Berlin Heidelberg, 2005. 476-483 
+
+\bibitem{Wehrens} Wehrens, Ron, and Lutgarde MC Buydens. "Self-and super-organizing maps in R: the Kohonen package." Journal of Statistical Software 21.5 (2007): 1-19. 
+
+\bibitem{Charkhabi}
+Charkhabi, Massoud. "Unsupervised Neural Networks through Self-Organizing Maps in R." "http://files.meetup.com/1718572/Unsupervised%20Neural%20Networks%20through%20Self-Organizing%20Maps%20in%20R.pdf" \newline
+
+\bibitem{van Heerden} van Heerden, Willem S. "Unsupervised Weight-Based Cluster Labeling for Self-Organizing Maps". Advances in Self-Organizing Maps, Advances in Intelligent Systems and Computing Volume 198, 2013, pp 45-54. 
+
+\bibitem{Borgelt} Borgelt, Christian. "Self Organizing Map Training Visualization". http://www.borgelt.net/doc/somd/somd.html 
+
+\bibitem{Unt} "Self-Organizing Maps" http://genome.tugraz.at/MedicalInformatics2/SOM.pdf
+
+\bibitem{Valova} Valova, Iren, Daniel MacLean, and Derek Beaton. "Identification of patterns via region-growing parallel SOM neural network." Machine Learning and Applications, 2008. ICMLA'08. Seventh International Conference on. IEEE, 2008.
+
+\bibitem{Pang} Pang, Kevin. "Self Organizing Maps". http://www.cs.hmc.edu/~kpang/nn/som.html
+
+\bibitem{Kohonen} Kohonen, Teuvo. Self-organizing maps. Vol. 30. Springer, 2001.
+\end{thebibliography}
+
+
+\end{document}
